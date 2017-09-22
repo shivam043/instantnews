@@ -5,14 +5,14 @@ import webbrowser
 from colored import fg,bg,attr
 import sys
 import os
-
+apiKey=""
 API_URL="https://newsapi.org/register"
 BASE_URL="https://newsapi.org/v1/articles"
 SOURCE_URL="https://newsapi.org/v1/sources"
 valid=['y','n']
 
 def load_config_key():
-    global apiKey
+    
     try:
         apiKey=os.environ['IN_API_KEY']
         if len(apiKey)==32:
@@ -24,9 +24,11 @@ def load_config_key():
     except KeyError:
         print('No API Token detected. '
               'Please visit {0} and get an API Token, '
-              'which will be used by Soccer CLI '
+              'which will be used by instantnews '
               'to get access to the data.'
              .format(API_URL))
+        sys.exit(1)
+        
 
 def check_choice(choice):
     
@@ -52,13 +54,8 @@ def show_sources_all():
 def show_news(l,BASE_URL):
     
     url="?source={news_id}&apiKey="
-    if not apiKey:
-        print('No API Token detected. '
-              'Please visit {0} and get an API Token, '
-              'which will be used by Soccer CLI '
-              'to get access to the data.'
-             .format(API_URL))
     
+
     r=requests.get((BASE_URL+url+apiKey).format(news_id=l))
     t=r.json()
     list_news=[]
@@ -102,13 +99,12 @@ def show_news(l,BASE_URL):
                 break
 def parser():
     
+    load_config_key()
     if not sys.argv[1:]:
-        print("Arguments needed Type in --help/-h for help")
+        print("Arguments need Type in --help/-h for help")
     else:
-        load_config_key()
+        
         parser=argparse.ArgumentParser()
-    
-    
         parser.add_argument("--show","-s",action="store",help="Shows all the channel codes category wise")
         parser.add_argument("--show_all","-sa",action="store_true",help="Shows all the channel codes")
         parser.add_argument("--news","-n",type=str,help="Shows news")
@@ -116,22 +112,16 @@ def parser():
     
         args=parser.parse_args()
     
-    
+        
         if args.show_all:
             show_sources_all()
-    
         elif args.show:
             show_sources_category(args.show)
-   
         elif args.news:
             show_news(args.news,BASE_URL)   
     
-
-
 def main():
-    
     parser()
-
-   
+    
 if __name__ == "__main__":
     main()    
