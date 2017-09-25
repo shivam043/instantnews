@@ -38,7 +38,7 @@ Usage
 ### Get help
 
 ```bash
-$ insantnews -h/--help  #Get Help
+$ instantnews -h/--help  #Get Help
 usage: instantnews [-h] [--show SHOW] [--show_all] [--news NEWS]
 
 optional arguments:
@@ -51,7 +51,7 @@ optional arguments:
 ### Get news-code category-wise/all
 ```bash
 
-$ insantnews -sa/--show_all
+$ instantnews -sa/--show_all
 forexample:
 instantnews --show_all
 News Code: <abc-news-au> ABC News (AU)
@@ -64,7 +64,7 @@ News Code: <bild> Bild
 News Code: <bloomberg> Bloomberg
 News Code: <breitbart-news> Breitbart News .....
 
-$ insantnews -s/--show business
+$ instantnews -s/--show business
 forexample:
 instantnews --show business  # Categories available-'business','entertainment','gaming','general','music','politics','science-and-nature','sport','technology'
 News Code: <bloomberg> Bloomberg
@@ -79,7 +79,7 @@ News Code: <handelsblatt> Handelsblatt
 ```
 ### Get news 
 ```bash
-$ insantnews -n/--news  [news-id]
+$ instantnews -n/--news  [news-id]
 forexample:
 instantnews --news bbc-news
 [0] Title: Trump denies NFL kneel row race-related
