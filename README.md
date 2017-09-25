@@ -91,7 +91,7 @@ Author: BBC News
 Summary: Nationalists lay out their plans after winning nearly 13% of the vote, weakening Chancellor Merkel.
 --------------------------------------------
 ........
-Want to see the news that interests you/open in a webpage? Enter Y/N #See news in a webpage by enter the number present in the box
+Want to see the news that interests you/open in a webpage? Enter Y/N # See news in a webpage by enter the number present in the box
 ```
 
 
