@@ -77,7 +77,7 @@ News Code: <fortune> Fortune
 News Code: <handelsblatt> Handelsblatt
 
 ```
-###Get news 
+### Get news 
 ```bash
 $ insantnews -n/--news  [news-id]
 forexample:
