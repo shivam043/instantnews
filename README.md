@@ -29,7 +29,6 @@ $ cd instantnew
 $ python setup.py install
 ```
 #### Note:
-Currently supports Linux, Mac OS X, NetBSD, FreeBSD and Windows.
 Python 2.7 and Python 3 compatible
 
 Usage
