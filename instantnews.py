@@ -1,21 +1,168 @@
-from distutils.core import setup
+#!/usr/bin/env python
+'''
+Author:Shivam Singh
+mail:shivam043@gmail.com
+copyright@2017
+'''
 
-setup(
-      name='instantnews',
-      version='1.2.0',
-      description='Get live news instantaneously',
-      author='shivam singh',
-      author_email='shivam043@gmail.com',
-      url='https://github.com/shivam043/instantnews',
-      license='MIT',
-      py_modules=['instantnews'],
-      install_requires=[
-      'requests'
-      ],
-      entry_points='''
-      [console_scripts]
-      instantnews=instantnews:parser
-      ''',
-      
-)
-      
+import requests
+import argparse
+import webbrowser
+import sys
+import os
+
+API_URL="https://newsapi.org/register"
+BASE_URL="https://newsapi.org/v1/articles"
+SOURCE_URL="https://newsapi.org/v1/sources"
+valid=['y','n']
+news_code=['1','2']
+category_news=['business','entertainment','gaming','general','music','politics','science-and-nature','sport','technology']
+
+''' Fetching all the news code  '''
+def fetch_all_news_code():
+    r=requests.get(SOURCE_URL)
+    t=r.json()
+    for i in t['sources']:
+        news_code.append(i['id'])
+    
+
+''' Load api key on a global apikey and validate it  '''
+
+def load_config_key():
+    
+    try:
+        global apiKey
+        apiKey=os.environ['IN_API_KEY']
+        if len(apiKey)==32:
+            try:
+                int(apiKey,16)
+            except ValueError:
+                print("Invalid API key")
+    
+    except KeyError:
+        print('No API Token detected. '
+              'Please visit {0} and get an API Token, '
+              'which will be used by instantnews '
+              'to get access to the data.'
+             .format(API_URL))
+        sys.exit(1)
+
+''' Function to validate choice for yes or no'''
+
+def check_choice(choice):
+    
+    if len(choice)>1:
+        return True
+    
+    if choice=="y" or choice=="n":
+        return False
+'''Function for displaying news code category wise'''
+
+def show_sources_category(l):
+   
+    flag=0
+    if l in category_news:
+        flag=1
+    if flag==0:
+        print("Enter valid category")
+        sys.exit(1)
+
+    url="?category={category_type}"
+    r=requests.get((SOURCE_URL+url).format(category_type=l))
+    t=r.json()
+    for i in t['sources']:
+        print(u"{0}: <{1}> {2}".format("News Code",i['id'],i['name']))
+
+'''Function for displaying all news code'''
+
+def show_sources_all():
+    r=requests.get(SOURCE_URL)
+    t=r.json()
+    for i in t['sources']:
+        print(u"{0}: <{1}> {2}".format("News Code",i['id'],i['name']))
+
+'''Function for displaying news w.r.t news id'''
+
+def show_news(l,BASE_URL):
+    
+    url="?source={news_id}&apiKey="
+    
+    r=requests.get((BASE_URL+url+apiKey).format(news_id=l))
+    t=r.json()
+    list_news=[]
+    c=0
+    
+    for i in t['articles']:
+        print('[{0}] {1}: {2}'.format(c,"Title",i['title']))
+        print('{0}: {1}'.format("Author",i['author']))
+        print('{0}: {1}'.format("Summary",i['description']))
+        print('--------------------------------------------')
+        list_news.append(i['url'])
+        c=c+1
+    
+    print("Want to see the news that interests you/open in a webpage? Enter Y/N ")    
+    
+    choice=(input()).lower()
+    while check_choice(choice):
+          print("Ooops that was wrong,Try again!")
+          choice=input("Enter (y/n): ").lower()
+
+    
+    if choice=='y':
+        
+        while choice=='y':
+            
+            news_code=input("Enter news code: ")
+            while not(news_code.isdigit()) or not (0<=int(news_code)<=c):
+                print("Ooops that was wrong,Try again!")
+                news_code=input("Pick One: ")
+            
+            webbrowser.open(list_news[int(news_code)])
+            print("Want to exit? Enter Y/N ")
+            choice=(input()).lower()
+            if choice not in valid:
+               sys.exit()
+
+            if choice=='n':
+                choice='y'
+                continue
+            else:
+                break
+'''Arguments building fun d: '''
+
+def parser():
+    
+    fetch_all_news_code()
+    load_config_key()
+    if not sys.argv[1:]:
+        print("Arguments need Type in --help/-h for help")
+    else:
+        
+        parser=argparse.ArgumentParser()
+        parser.add_argument("--show","-s",action="store",help="Shows all the news channel codes category wise")
+        parser.add_argument("--show_all","-sa",action="store_true",help="Shows all the news channel codes")
+        parser.add_argument("--news","-n",type=str,help="Shows news")
+    
+    
+        args=parser.parse_args()
+    
+        
+        if args.show_all:
+            show_sources_all()
+        elif args.show:
+            show_sources_category(args.show)
+        elif args.news:
+             flag=0
+             l=args.news
+             if l in news_code:
+                 flag=1  
+             if flag==0:
+                 print("Enter valid newscode")
+                 sys.exit(1)
+             show_news(args.news,BASE_URL)   
+    
+def main():
+    parser()
+    
+if __name__ == "__main__":
+    main()    
