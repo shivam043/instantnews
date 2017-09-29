@@ -18,6 +18,20 @@ valid=['y','n']
 news_code=['1','2']
 category_news=['business','entertainment','gaming','general','music','politics','science-and-nature','sport','technology']
 
+''' Function to test network connection '''
+def test_network_connection():
+   try:
+       r=requests.get("https://newsapi.org/")
+       r.raise_for_status()
+   except requests.exceptions.ConnectionError:
+       print("There was issue connecting to the server. Please check your network connection.")
+       sys.exit(1)
+   except requests.exceptions.RequestException as e:
+       print(e)
+       sys.exit(1)
+
+
+
 ''' Fetching all the news code  '''
 def fetch_all_news_code():
     r=requests.get(SOURCE_URL)
