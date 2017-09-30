@@ -13,12 +13,12 @@ An API key from [newsapi](http://newsapi.org/) will be required and you can regi
 $ pip install instantnews
 ```
 
-Set your API key in an environment variable `IN_API_TOKEN`
+Set your API key in an environment variable `IN_API_KEY`
 
 For example:
 
 ```bash
-export IN_API_TOKEN="<YOUR_API_TOKEN>"
+export IN_API_KEY="<YOUR_API_TOKEN>"
 ```
 
 ### Build from source
