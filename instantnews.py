@@ -176,6 +176,7 @@ def parser():
              show_news(args.news,BASE_URL)   
     
 def main():
+    test_network_connection()
     parser()
     
 if __name__ == "__main__":
