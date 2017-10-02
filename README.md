@@ -1,5 +1,6 @@
 # instantnews
 ## Get news instantly! :notes: :newspaper: 
+### Released v1.2.3
 [![PyPI](https://img.shields.io/badge/instantnews-downloads-brightgreen.svg)](https://pypi.python.org/pypi?:action=display&name=instantnews&version=1.2.1)
 
 Install
