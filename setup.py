@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
       name='instantnews',
-      version='1.2.0',
+      version='1.2.3',
       description='Get live news instantaneously',
       author='shivam singh',
       author_email='shivam043@gmail.com',
