@@ -13,47 +13,53 @@ import webbrowser
 import requests
 
 
+# Global constants
 API_URL = "https://newsapi.org/register"
 BASE_URL = "https://newsapi.org/v1/articles"
 SOURCE_URL = "https://newsapi.org/v1/sources"
-valid = ['y', 'n']
-news_code = ['1', '2']
-category_news = [
+VALID = ['y', 'n']
+NEWS_CATEGORIES = [
     'business', 'entertainment', 'gaming',
     'general', 'music', 'politics',
     'science-and-nature', 'sport', 'technology'
     ]
 
 
+# Global variable
+news_codes = ['1', '2']
+api_key = ""
+
+
 def test_network_connection():
     """Test network connection"""
     try:
-        r = requests.get("https://newsapi.org/")
-        r.raise_for_status()
+        response = requests.get("https://newsapi.org/")
+        response.raise_for_status()
     except requests.exceptions.ConnectionError:
         print("There was issue connecting to the server. Please check your network connection.")
         sys.exit(1)
-    except requests.exceptions.RequestException as e:
-        print(e)
+    except requests.exceptions.RequestException as exception:
+        print(exception)
         sys.exit(1)
 
 
-def fetch_all_news_code():
-    """Fetch all news codes"""
-    r = requests.get(SOURCE_URL)
-    t = r.json()
-    for i in t['sources']:
-        news_code.append(i['id'])
+def fetch_all_news_codes():
+    """Fetch news codes from all sources"""
+    response = requests.get(SOURCE_URL)
+    json = response.json()
+    global news_codes
+    for source in json['sources']:
+        news_codes.append(source['id'])
 
 
 def load_config_key():
     """Load api key on a global api key and validate it"""
     try:
-        global apiKey
-        apiKey = os.environ['IN_API_KEY']
-        if len(apiKey) == 32:
+        global api_key
+        api_key = os.environ['IN_API_KEY']
+        if len(api_key) == 32:
             try:
-                int(apiKey, 16)
+                int(api_key, 16)
             except ValueError:
                 print("Invalid API key")
     except KeyError:
@@ -76,41 +82,41 @@ def check_choice(choice):
 def show_sources_category(l):
     """Display news codes by category"""
     flag = 0
-    if l in category_news:
+    if l in NEWS_CATEGORIES:
         flag = 1
     if flag == 0:
         print("Enter valid category")
         sys.exit(1)
 
     url = "?category={category_type}"
-    r = requests.get((SOURCE_URL+url).format(category_type=l))
-    t = r.json()
-    for i in t['sources']:
-        print(u"{0}: <{1}> {2}".format("News Code", i['id'], i['name']))
+    response = requests.get((SOURCE_URL+url).format(category_type=l))
+    json = response.json()
+    for code in json['sources']:
+        print(u"{0}: <{1}> {2}".format("News Code", code['id'], code['name']))
 
 
 def show_sources_all():
     """Display all news codes"""
-    r = requests.get(SOURCE_URL)
-    t = r.json()
-    for i in t['sources']:
-        print(u"{0}: <{1}> {2}".format("News Code", i['id'], i['name']))
+    response = requests.get(SOURCE_URL)
+    json = response.json()
+    for code in json['sources']:
+        print(u"{0}: <{1}> {2}".format("News Code", code['id'], code['name']))
 
 
 def show_news(l, BASE_URL):
     """Display news with respect to news id"""
     url = "?source={news_id}&apiKey="
-    r = requests.get((BASE_URL+url+apiKey).format(news_id=l))
-    t = r.json()
+    response = requests.get((BASE_URL+url+api_key).format(news_id=l))
+    json = response.json()
     list_news = []
     c = 0
 
-    for i in t['articles']:
-        print('[{0}] {1}: {2}'.format(c, "Title", i['title']))
-        print('{0}: {1}'.format("Author", i['author']))
-        print('{0}: {1}'.format("Summary", i['description']))
+    for code in json['articles']:
+        print('[{0}] {1}: {2}'.format(c, "Title", code['title']))
+        print('{0}: {1}'.format("Author", code['author']))
+        print('{0}: {1}'.format("Summary", code['description']))
         print('--------------------------------------------')
-        list_news.append(i['url'])
+        list_news.append(code['url'])
         c = c+1
 
     print("Want to see the news that interests you/open in a webpage? Enter Y/N ")
@@ -122,15 +128,15 @@ def show_news(l, BASE_URL):
 
     if choice == 'y':
         while choice == 'y':
-            news_code = input("Enter news code: ")
-            while not news_code.isdigit() or not 0 <= int(news_code) <= c:
+            news_codes = input("Enter news code: ")
+            while not news_codes.isdigit() or not 0 <= int(news_codes) <= c:
                 print("Ooops that was wrong,Try again!")
-                news_code = input("Pick One: ")
+                news_codes = input("Pick One: ")
 
-            webbrowser.open(list_news[int(news_code)])
+            webbrowser.open(list_news[int(news_codes)])
             print("Want to exit? Enter Y/N ")
             choice = (input()).lower()
-            if choice not in valid:
+            if choice not in VALID:
                 sys.exit()
 
             if choice == 'n':
@@ -142,8 +148,9 @@ def show_news(l, BASE_URL):
 
 def parser():
     """Parse arguments and call appropriate functions"""
-    fetch_all_news_code()
+    fetch_all_news_codes()
     load_config_key()
+
     if not sys.argv[1:]:
         print("Arguments need Type in --help/-h for help")
     else:
@@ -162,7 +169,7 @@ def parser():
         elif args.news:
             flag = 0
             l = args.news
-            if l in news_code:
+            if l in news_codes:
                 flag = 1
             if flag == 0:
                 print("Enter valid newscode")
