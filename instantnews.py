@@ -25,7 +25,7 @@ NEWS_CATEGORIES = [
     ]
 
 
-# Global variable
+# Global variables
 news_codes = ['1', '2']
 api_key = ""
 
@@ -73,67 +73,63 @@ def load_config_key():
 
 def check_choice(choice):
     """Validate choice for yes or no"""
-    if len(choice) > 1:
+    if choice == 'y' or choice == 'n':
         return True
-    if choice == "y" or choice == "n":
+    else:
         return False
 
 
-def show_sources_category(l):
+def show_sources_category(category):
     """Display news codes by category"""
-    flag = 0
-    if l in NEWS_CATEGORIES:
-        flag = 1
-    if flag == 0:
-        print("Enter valid category")
+    if category not in NEWS_CATEGORIES:
+        print("Invalid category")
         sys.exit(1)
 
     url = "?category={category_type}"
-    response = requests.get((SOURCE_URL+url).format(category_type=l))
+    response = requests.get((SOURCE_URL+url).format(category_type=category))
     json = response.json()
-    for code in json['sources']:
-        print(u"{0}: <{1}> {2}".format("News Code", code['id'], code['name']))
+    for source in json['sources']:
+        print(u"{0}: <{1}> {2}".format("News Code", source['id'], source['name']))
 
 
 def show_sources_all():
     """Display all news codes"""
     response = requests.get(SOURCE_URL)
     json = response.json()
-    for code in json['sources']:
-        print(u"{0}: <{1}> {2}".format("News Code", code['id'], code['name']))
+    for source in json['sources']:
+        print(u"{0}: <{1}> {2}".format("News Code", source['id'], source['name']))
 
 
-def show_news(l, BASE_URL):
+def show_news(code, BASE_URL):
     """Display news with respect to news id"""
     url = "?source={news_id}&apiKey="
-    response = requests.get((BASE_URL+url+api_key).format(news_id=l))
+    response = requests.get((BASE_URL+url+api_key).format(news_id=code))
     json = response.json()
+    
     list_news = []
-    c = 0
-
-    for code in json['articles']:
-        print('[{0}] {1}: {2}'.format(c, "Title", code['title']))
-        print('{0}: {1}'.format("Author", code['author']))
-        print('{0}: {1}'.format("Summary", code['description']))
+    for article in json['articles']:
+        print('[{0}] {1}: {2}'.format(c, "Title", article['title']))
+        print('{0}: {1}'.format("Author", article['author']))
+        print('{0}: {1}'.format("Summary", article['description']))
         print('--------------------------------------------')
-        list_news.append(code['url'])
-        c = c+1
+        list_news.append(article['url'])
 
     print("Want to see the news that interests you/open in a webpage? Enter Y/N ")
 
     choice = (input()).lower()
-    while check_choice(choice):
+    while not check_choice(choice):
         print("Ooops that was wrong,Try again!")
         choice = input("Enter (y/n): ").lower()
 
     if choice == 'y':
         while choice == 'y':
             news_codes = input("Enter news code: ")
-            while not news_codes.isdigit() or not 0 <= int(news_codes) <= c:
+            while not news_codes.isdigit() or not 0 <= int(news_codes) <= len(list_news):
                 print("Ooops that was wrong,Try again!")
                 news_codes = input("Pick One: ")
 
             webbrowser.open(list_news[int(news_codes)])
+
             print("Want to exit? Enter Y/N ")
             choice = (input()).lower()
             if choice not in VALID:
@@ -167,14 +163,11 @@ def parser():
         elif args.show:
             show_sources_category(args.show)
         elif args.news:
-            flag = 0
-            l = args.news
-            if l in news_codes:
-                flag = 1
-            if flag == 0:
-                print("Enter valid newscode")
+            if args.news in news_codes:
+                show_news(args.news, BASE_URL)
+            else:
+                print("Invalid newscode")
                 sys.exit(1)
-            show_news(args.news, BASE_URL)
 
 
 def main():
