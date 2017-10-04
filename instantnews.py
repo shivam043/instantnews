@@ -97,6 +97,12 @@ def show_sources_all():
         print(u"{0}: <{1}> {2}".format("News Code", source['id'], source['name']))
 
 
+def show_categories():
+    """Display all news categories"""
+    for category in NEWS_CATEGORIES:
+        print(category)
+
+
 def show_news(code, BASE_URL):
     """Display news with respect to news id"""
     url = "?source={news_id}&apiKey="
@@ -144,16 +150,20 @@ def parser():
         print("Arguments needed. Use argument --help/-h for more information.")
     else:
         parser = argparse.ArgumentParser()
-        parser.add_argument("--show", "-s", action="store",
-                            help="Shows all news channel codes for a specified category.")
         parser.add_argument("--show_all", "-sa", action="store_true",
                             help="Shows all available news channel codes.")
+        parser.add_argument("--categories", "-c", action="store_true",
+                            help="Shows all available news categories.")
+        parser.add_argument("--show", "-s", action="store",
+                            help="Shows all news channel codes for a specified category.")
         parser.add_argument("--news", "-n", type=str, help="Shows news articles "
                             "for a specified news channel code.")
         args = parser.parse_args()
 
         if args.show_all:
             show_sources_all()
+        elif args.categories:
+            show_categories()
         elif args.show:
             show_sources_category(args.show)
         elif args.news:
