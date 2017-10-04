@@ -74,10 +74,7 @@ def check_choice(choice):
 
 def show_sources_category(l):
    
-    flag=0
-    if l in category_news:
-        flag=1
-    if flag==0:
+    if l not in category_news:
         print("Enter valid category")
         sys.exit(1)
 
