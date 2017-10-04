@@ -26,7 +26,7 @@ NEWS_CATEGORIES = [
 
 
 # Global variables
-news_codes = ['1', '2']
+news_codes = []
 api_key = ""
 
 
@@ -73,10 +73,7 @@ def load_config_key():
 
 def check_choice(choice):
     """Validate choice for yes or no"""
-    if choice == 'y' or choice == 'n':
-        return True
-    else:
-        return False
+    return choice == 'y' or choice == 'n'
 
 
 def show_sources_category(category):
@@ -105,41 +102,37 @@ def show_news(code, BASE_URL):
     url = "?source={news_id}&apiKey="
     response = requests.get((BASE_URL+url+api_key).format(news_id=code))
     json = response.json()
-    
-    list_news = []
+
+    article_list = []
     for article in json['articles']:
-        print('[{0}] {1}: {2}'.format(c, "Title", article['title']))
+        print('[{0}] {1}: {2}'.format(len(article_list), "Title", article['title']))
         print('{0}: {1}'.format("Author", article['author']))
         print('{0}: {1}'.format("Summary", article['description']))
         print('--------------------------------------------')
-        list_news.append(article['url'])
+        article_list.append(article['url'])
 
-    print("Want to see the news that interests you/open in a webpage? Enter Y/N ")
+    print("Would you like to open an article in a web browser? Enter (y/n): ")
 
     choice = (input()).lower()
-    while not check_choice(choice):
-        print("Ooops that was wrong,Try again!")
-        choice = input("Enter (y/n): ").lower()
+    if choice not in VALID:
+        print("Invalid entry.")
+        sys.exit()
 
     if choice == 'y':
         while choice == 'y':
-            news_codes = input("Enter news code: ")
-            while not news_codes.isdigit() or not 0 <= int(news_codes) <= len(list_news):
-                print("Ooops that was wrong,Try again!")
-                news_codes = input("Pick One: ")
+            article_number = input("Enter an article number: ")
+            while not article_number.isdigit() or not 0 <= int(article_number) <= len(article_list):
+                print("Invalid article number. Try again.")
+                article_number = input("Enter an article number: ")
 
-            webbrowser.open(list_news[int(news_codes)])
+            webbrowser.open(article_list[int(article_number)])
 
-            print("Want to exit? Enter Y/N ")
+            print("Would you like to view another article? Enter (y/n): ")
             choice = (input()).lower()
             if choice not in VALID:
                 sys.exit()
-
-            if choice == 'n':
-                choice = 'y'
+            if choice == 'y':
                 continue
-            else:
-                break
 
 
 def parser():
@@ -148,14 +141,15 @@ def parser():
     load_config_key()
 
     if not sys.argv[1:]:
-        print("Arguments need Type in --help/-h for help")
+        print("Arguments needed. Use argument --help/-h for more information.")
     else:
         parser = argparse.ArgumentParser()
         parser.add_argument("--show", "-s", action="store",
-                            help="Shows all the news channel codes category wise")
+                            help="Shows all news channel codes for a specified category.")
         parser.add_argument("--show_all", "-sa", action="store_true",
-                            help="Shows all the news channel codes")
-        parser.add_argument("--news", "-n", type=str, help="Shows news")
+                            help="Shows all available news channel codes.")
+        parser.add_argument("--news", "-n", type=str, help="Shows news articles "
+                            "for a specified news channel code.")
         args = parser.parse_args()
 
         if args.show_all:
@@ -166,7 +160,7 @@ def parser():
             if args.news in news_codes:
                 show_news(args.news, BASE_URL)
             else:
-                print("Invalid newscode")
+                print("Invalid news code.")
                 sys.exit(1)
 
 
