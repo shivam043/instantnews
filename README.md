@@ -14,6 +14,11 @@ An API key from [newsapi](http://newsapi.org/) will be required and you can regi
 ```bash
 $ pip install instantnews
 ```
+### Using `pip` upgrade
+
+```bash
+$ pip install instantnews --upgrade
+```
 
 Set your API key in an environment variable `IN_API_KEY`
 
