@@ -1,8 +1,8 @@
 from setuptools import setup
-
+from distutils.core import setup
 setup(
       name='instantnews',
-      version='1.2.3',
+      version='1.2.4',
       description='Get live news instantaneously',
       author='shivam singh',
       author_email='shivam043@gmail.com',
