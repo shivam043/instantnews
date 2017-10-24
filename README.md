@@ -48,7 +48,7 @@ $ instantnews -h/--help  #Get Help
 usage: instantnews [-h] [--show SHOW] [--show_all] [--news NEWS]
 
 optional arguments:
-  -h, --help            show this help message and exit
+  --help, -h            show this help message and exit
   --show SHOW, -s SHOW  Shows all the news channel codes category wise
   --show_all, -sa       Shows all the news channel codes
   --news NEWS, -n NEWS  Shows news
