@@ -23,11 +23,19 @@ NEWS_CATEGORIES = [
     'general', 'music', 'politics',
     'science-and-nature', 'sport', 'technology'
     ]
+COLOR_DICT = {\
+        'clear': "\033[0m", \
+        'red_ul': "\033[4;31m", \
+        'cyan': "\033[0;36m", \
+        'yellow': "\033[0;93m", \
+        'magenta': "\033[0;35m" \
+        }
 
 
 # Global variables
 news_codes = []
 api_key = ""
+os_type = ""
 
 
 def test_network_connection():
@@ -103,6 +111,13 @@ def show_categories():
         print(category)
 
 
+def colorize(text, color):
+    """ Surrount text with ANSI escape strings; refer to COLOR_DICT for colors"""
+    if os_type == "Windows":
+        return text
+    return color + text + COLOR_DICT['clear']
+
+
 def show_news(code, BASE_URL):
     """Display news with respect to news id"""
     url = "?source={news_id}&apiKey="
@@ -111,9 +126,10 @@ def show_news(code, BASE_URL):
 
     article_list = []
     for article in json['articles']:
-        print('[{0}] {1}: {2}'.format(len(article_list), "Title", article['title']))
-        print('{0}: {1}'.format("Author", article['author']))
-        print('{0}: {1}'.format("Summary", article['description']))
+        print('[{0}] {1}: {2}'.format(len(article_list), "Title", \
+               colorize(article['title'], COLOR_DICT['red_ul'])))
+        print('{0}: {1}'.format("Author", colorize(article['author'], COLOR_DICT['magenta'])))
+        print('{0}: {1}'.format("Summary", colorize(article['description'], COLOR_DICT['cyan'])))
         print('--------------------------------------------')
         article_list.append(article['url'])
 
@@ -177,6 +193,13 @@ def parser():
 def main():
     """Test network connection, then parse arguments"""
     test_network_connection()
+
+    global os_type 
+    if os.name == 'nt':
+        os_type = 'Windows'
+    else:
+        os_type = 'Unix'
+
     parser()
 
 
