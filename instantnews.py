@@ -103,7 +103,7 @@ def show_categories():
         print(category)
 
 
-def show_news(code, BASE_URL):
+def show_news(code):
     """Display news with respect to news id"""
     url = "?source={news_id}&apiKey="
     response = requests.get((BASE_URL+url+api_key).format(news_id=code))
@@ -168,7 +168,7 @@ def parser():
             show_sources_category(args.show)
         elif args.news:
             if args.news in news_codes:
-                show_news(args.news, BASE_URL)
+                show_news(args.news)
             else:
                 print("Invalid news code.")
                 sys.exit(1)

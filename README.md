@@ -7,7 +7,7 @@
 Install
 =====
 
-An API key from [newsapi](http://newsapi.org/) will be required and you can register for one [here](http://newsapi.com/register).
+An API key from [newsapi](http://newsapi.org/) will be required and you can register for one [here](http://newsapi.org/register).
 
 ### Using `pip`
 
