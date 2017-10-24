@@ -1,5 +1,10 @@
-from setuptools import setup
 from distutils.core import setup
+
+
+with open('requirements.txt') as fobj:
+    install_requires = [line.strip() for line in fobj]
+
+
 setup(
       name='instantnews',
       version='1.2.4',
@@ -9,13 +14,9 @@ setup(
       url='https://github.com/shivam043/instantnews',
       license='MIT',
       py_modules=['instantnews'],
-      install_requires=[
-      'requests'
-      ],
+      install_requires=install_requires,
       entry_points='''
       [console_scripts]
       instantnews=instantnews:parser
       ''',
-      
 )
-      
