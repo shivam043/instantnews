@@ -1,0 +1,18 @@
+name: instantnews
+version: '1.2.4'
+summary: https://github.com/shivam043/instantnews
+description: |
+  Get live news instantly
+grade: stable
+confinement: strict
+apps:
+  instantnews:
+    command: instantnews
+    plugs: [network]
+  chardetect:
+    command: chardetect
+parts:
+  instantnews:
+    source: .
+    source-commit: de233b38a7ed8a6ed440e1700f02c1ef65f581a7
+    plugin: python
