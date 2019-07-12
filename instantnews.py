@@ -105,6 +105,13 @@ def show_categories():
 
 def show_news(code, BASE_URL):
     """Display news with respect to news id"""
+    
+    """Compatibility check for Python 2/3"""
+    try:
+        input = raw_input
+    except NameError:
+        pass
+
     url = "?source={news_id}&apiKey="
     response = requests.get((BASE_URL+url+api_key).format(news_id=code))
     json = response.json()
