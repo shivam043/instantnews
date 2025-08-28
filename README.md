@@ -1,5 +1,6 @@
 # instantnews
 ## Get news instantly! :notes: :newspaper: 
+### Awesome way to get news
 ### Released v1.2.3
 [![PyPI](https://img.shields.io/badge/instantnews-downloads-brightgreen.svg)](https://pypi.python.org/pypi?:action=display&name=instantnews&version=1.2.1)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/instantnews/Lobby)
@@ -8,7 +9,6 @@ Install
 =====
 
 An API key from [newsapi](http://newsapi.org/) will be required and you can register for one [here](http://newsapi.com/register).
-
 ### Using `pip`
 
 ```bash
